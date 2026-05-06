@@ -1,0 +1,10 @@
+﻿fastapi
+uvicorn[standard]
+sqlalchemy
+python-dotenv
+passlib[argon2]
+python-jose[cryptography]
+email-validator
+python-multipart
+cloudinary==1.44.1
+pymysql
