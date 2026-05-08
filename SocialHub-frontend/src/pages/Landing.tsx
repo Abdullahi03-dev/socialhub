@@ -4,8 +4,6 @@ import Header from "@/components/Header";
 import { 
   Users, 
   MessageSquare, 
-  Share2, 
-  Zap, 
   Shield, 
   Smartphone,
   ArrowRight,
