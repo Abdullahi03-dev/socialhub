@@ -1,111 +1,54 @@
 @import "tailwindcss";
 
-/* Modern Social Platform Design System - Tailwind v4 (HSL based) */
-
 @theme {
   /* Core Colors */
-  --color-background: hsl(0 0% 100%);
-  --color-foreground: hsl(222 84% 4.9%);
+  --color-background: hsl(0 0% 2%);
+  --color-foreground: hsl(0 0% 100%);
 
-  /* Brand Colors */
-  --color-primary: hsl(234 89% 74%);
+  /* Brand Colors - Sleek Premium Blue instead of Purple */
+  --color-primary: hsl(221 83% 53%);
   --color-primary-foreground: hsl(0 0% 100%);
-  --color-primary-dark: hsl(234 100% 67%);
-  --color-primary-light: hsl(234 89% 85%);
+  --color-primary-dark: hsl(221 83% 43%);
+  --color-primary-light: hsl(221 83% 73%);
 
-  /* Gradients */
-  --gradient-primary:linear-gradient(135deg, hsl(260 90% 65%), hsl(260 90% 65%));
-
-  --gradient-subtle: linear-gradient(135deg, hsl(234 89% 97%), hsl(280 100% 98%));
-  --gradient-hero: linear-gradient(
-    135deg,
-    hsl(234 89% 70%) 0%,
-    hsl(234 89% 70%) 0%,
-    hsl(234 89% 70%) 0%
-    /* hsl(280 100% 80%) 50%,
-    hsl(315 100% 85%) 100% */
-  );
+  /* Secondary / Accents */
+  --color-secondary: hsl(0 0% 15%);
+  --color-secondary-foreground: hsl(0 0% 100%);
+  --color-accent: hsl(0 0% 10%);
+  --color-accent-foreground: hsl(0 0% 100%);
 
   /* Card System */
-  --color-card: hsl(0 0% 100%);
-  --color-card-foreground: hsl(222 84% 4.9%);
-  --color-card-hover: hsl(234 89% 98%);
+  --color-card: hsl(0 0% 6%);
+  --color-card-foreground: hsl(0 0% 100%);
+  --color-card-hover: hsl(0 0% 9%);
 
   /* Interactive */
-  --color-secondary: hsl(234 20% 96%);
-  --color-secondary-foreground: hsl(222 47% 11%);
-  --color-secondary-hover: hsl(234 30% 94%);
-
-  --color-muted: hsl(210 40% 96%);
-  --color-muted-foreground: hsl(215 16% 47%);
-
-  --color-accent: hsl(234 89% 74%);
-  --color-accent-foreground: hsl(0 0% 100%);
-  --color-accent-hover: hsl(234 100% 67%);
+  --color-muted: hsl(0 0% 15%);
+  --color-muted-foreground: hsl(0 0% 65%);
 
   /* Status */
   --color-destructive: hsl(0 84% 60%);
   --color-destructive-foreground: hsl(0 0% 100%);
   --color-success: hsl(142 76% 36%);
   --color-success-foreground: hsl(0 0% 100%);
-  --color-warning: hsl(38 92% 50%);
-  --color-warning-foreground: hsl(0 0% 100%);
 
   /* UI Elements */
-  --color-border: hsl(214 32% 91%);
-  --color-input: hsl(214 32% 91%);
-  --color-ring: hsl(234 89% 74%);
+  --color-border: hsl(0 0% 15%);
+  --color-input: hsl(0 0% 15%);
+  --color-ring: hsl(221 83% 53%);
 
-  /* Shadows */
-  --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.05);
-  --shadow-md: 0 4px 6px -1px hsl(0 0% 0% / 0.1), 0 2px 4px -2px hsl(0 0% 0% / 0.1);
-  --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.1), 0 4px 6px -4px hsl(0 0% 0% / 0.1);
-  --shadow-primary: 0 8px 25px -8px hsl(234 89% 74% / 0.3);
+  /* Shadows - Subtle and clean */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -2px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.5);
+  --shadow-primary: 0 8px 25px -8px rgba(37, 99, 235, 0.4);
+  --shadow-glow: 0 0 40px -10px rgba(37, 99, 235, 0.3);
 
-  --radius: 0.75rem;
+  --radius: 1rem;
 
   /* Typography */
-  --font-heading: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-
-  /* Sidebar */
-  --color-sidebar-background: hsl(0 0% 98%);
-  --color-sidebar-foreground: hsl(240 5.3% 26.1%);
-  --color-sidebar-primary: hsl(240 5.9% 10%);
-  --color-sidebar-primary-foreground: hsl(0 0% 98%);
-  --color-sidebar-accent: hsl(240 4.8% 95.9%);
-  --color-sidebar-accent-foreground: hsl(240 5.9% 10%);
-  --color-sidebar-border: hsl(220 13% 91%);
-  --color-sidebar-ring: hsl(217.2 91.2% 59.8%);
-}
-
-/* Dark mode override */
-.dark {
-  --color-background: hsl(222.2 84% 4.9%);
-  --color-foreground: hsl(210 40% 98%);
-  --color-card: hsl(222.2 84% 4.9%);
-  --color-card-foreground: hsl(210 40% 98%);
-  --color-primary: hsl(210 40% 98%);
-  --color-primary-foreground: hsl(222.2 47.4% 11.2%);
-  --color-secondary: hsl(217.2 32.6% 17.5%);
-  --color-secondary-foreground: hsl(210 40% 98%);
-  --color-muted: hsl(217.2 32.6% 17.5%);
-  --color-muted-foreground: hsl(215 20.2% 65.1%);
-  --color-accent: hsl(217.2 32.6% 17.5%);
-  --color-accent-foreground: hsl(210 40% 98%);
-  --color-destructive: hsl(0 62.8% 30.6%);
-  --color-destructive-foreground: hsl(210 40% 98%);
-  --color-border: hsl(217.2 32.6% 17.5%);
-  --color-input: hsl(217.2 32.6% 17.5%);
-  --color-ring: hsl(212.7 26.8% 83.9%);
-  --color-sidebar-background: hsl(240 5.9% 10%);
-  --color-sidebar-foreground: hsl(240 4.8% 95.9%);
-  --color-sidebar-primary: hsl(224.3 76.3% 48%);
-  --color-sidebar-primary-foreground: hsl(0 0% 100%);
-  --color-sidebar-accent: hsl(240 3.7% 15.9%);
-  --color-sidebar-accent-foreground: hsl(240 4.8% 95.9%);
-  --color-sidebar-border: hsl(240 3.7% 15.9%);
-  --color-sidebar-ring: hsl(217.2 91.2% 59.8%);
+  --font-heading: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-body: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 /* Base styles */
@@ -118,29 +61,39 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
+    letter-spacing: -0.02em;
   }
 }
 
-/* Components */
+/* Utilities & Components */
 @layer components {
-  .gradient-primary { background: var(--gradient-primary); }
-  .gradient-subtle { background: var(--gradient-subtle); }
-  .gradient-hero { background: var(--gradient-hero); }
+  /* Replaced gradients with sleek solid backgrounds */
+  .bg-primary-solid { background-color: var(--color-primary); }
 
-  .transition-smooth {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  .text-highlight {
+    color: var(--color-primary);
+  }
+
+  .glass-panel {
+    background-color: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
   }
 
   .hover-lift {
-    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease, border-color 0.3s ease;
   }
   .hover-lift:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: var(--shadow-glow);
+    border-color: rgba(37, 99, 235, 0.4);
   }
 
   .card-interactive {
@@ -148,73 +101,86 @@
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
     padding: 1.5rem;
-    transition: all 0.3s;
-    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
   .card-interactive:hover {
     background-color: var(--color-card-hover);
     box-shadow: var(--shadow-lg);
-  }
-
-  .card-post {
-    background-color: var(--color-card);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius);
-    overflow: hidden;
-    transition: all 0.3s;
-  }
-  .card-post:hover {
-    box-shadow: var(--shadow-md);
+    border-color: rgba(255,255,255,0.15);
   }
 
   .btn-hero {
     background-color: var(--color-primary);
     color: var(--color-primary-foreground);
     padding: 0.75rem 2rem;
-    border-radius: var(--radius);
+    border-radius: 9999px;
     font-weight: 600;
     transition: all 0.3s;
     box-shadow: var(--shadow-primary);
+    border: 1px solid transparent;
   }
-  .btn-hero:hover { opacity: 0.9; }
+  
+  .btn-hero:hover { 
+    background-color: var(--color-primary-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 10px 30px -10px rgba(37, 99, 235, 0.5);
+  }
 
   .btn-secondary {
-    background-color: var(--color-secondary);
-    color: var(--color-secondary-foreground);
+    background-color: transparent;
+    color: var(--color-foreground);
     padding: 0.625rem 1.5rem;
-    border-radius: calc(var(--radius) - 0.25rem);
+    border-radius: 9999px;
     font-weight: 500;
+    border: 1px solid rgba(255,255,255,0.2);
     transition: all 0.3s;
   }
-  .btn-secondary:hover { background-color: var(--color-secondary-hover); }
+  .btn-secondary:hover { 
+    background-color: rgba(255,255,255,0.05);
+    border-color: rgba(255,255,255,0.4);
+  }
 
   .input-field {
     width: 100%;
     padding: 0.75rem 1rem;
-    background-color: var(--color-background);
-    border: 1px solid var(--color-input);
-    border-radius: var(--radius);
+    background-color: var(--color-accent);
+    border: 1px solid var(--color-border);
+    border-radius: calc(var(--radius) - 0.25rem);
     outline: none;
+    color: var(--color-foreground);
     transition: all 0.3s;
   }
   .input-field:focus {
     border-color: var(--color-ring);
-    box-shadow: 0 0 0 2px var(--color-ring);
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+    background-color: var(--color-card);
   }
 
   .text-hero {
-    font-size: 3rem;
-    font-weight: 700;
+    font-size: 3.5rem;
+    font-weight: 800;
     line-height: 1.1;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.03em;
   }
   @media (min-width: 768px) {
-    .text-hero { font-size: 3.75rem; }
+    .text-hero { font-size: 5rem; }
   }
 
   .text-subtitle {
     font-size: 1.25rem;
     color: var(--color-muted-foreground);
     line-height: 1.6;
+    font-weight: 400;
   }
+}
+
+/* Animations */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
 }

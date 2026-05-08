@@ -20,8 +20,8 @@ const Sidebar = () => {
   return (
     <div
       className={cn(
-        "fixed left-0 top-16 z-40 h-[calc(100vh-4rem)] bg-card border-r border-border transition-all duration-300",
-        "md:relative md:top-0 md:h-screen",
+        "fixed left-0 top-20 z-40 h-[calc(100vh-5rem)] glass-panel border-r border-white/5 transition-all duration-300",
+        "md:fixed md:top-20 md:h-[calc(100vh-5rem)]",
         // Mobile = small, Desktop = full
         "w-16 md:w-64"
       )}
@@ -35,10 +35,10 @@ const Sidebar = () => {
               key={item.name}
               to={item.href}
               className={cn(
-                "flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-smooth",
+                "flex items-center px-4 py-3 rounded-xl text-sm font-medium transition-smooth",
                 isActive
-                  ? "bg-primary text-primary-foreground shadow-primary"
-                  : "text-muted-foreground hover:text-foreground hover:bg-secondary",
+                  ? "bg-primary/20 text-primary border border-primary/30 shadow-glow"
+                  : "text-muted-foreground hover:text-white hover:bg-white/5",
                 // Center icons on mobile
                 "justify-center md:justify-start"
               )}

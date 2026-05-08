@@ -1,8 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import Header from "@/components/Header";
-import heroImage from "@/assets/hero-image.svg";
 import { 
   Users, 
   MessageSquare, 
@@ -11,209 +9,129 @@ import {
   Shield, 
   Smartphone,
   ArrowRight,
-  CheckCircle
+  Globe,
+  Activity
 } from "lucide-react";
 
 const features = [
   {
     icon: Users,
-    title: "Connect with Others",
-    description: "Build meaningful connections with people who share your interests and passions."
+    title: "Global Community",
+    description: "Connect with thousands of creators and thinkers from around the globe in real-time."
   },
   {
     icon: MessageSquare,
     title: "Rich Conversations",
-    description: "Engage in thoughtful discussions with advanced commenting and interaction features."
+    description: "Engage in deep, threaded discussions with markdown support and media attachments."
   },
   {
-    icon: Share2,
-    title: "Share Your Story",
-    description: "Express yourself through posts, images, and multimedia content that matters to you."
-  },
-  {
-    icon: Zap,
-    title: "Lightning Fast",
-    description: "Experience blazing fast performance with real-time updates and seamless interactions."
+    icon: Activity,
+    title: "Real-time Feed",
+    description: "Experience a blazing-fast, intelligent feed tailored to your interests and connections."
   },
   {
     icon: Shield,
-    title: "Privacy First",
-    description: "Your data is protected with enterprise-grade security and privacy controls."
+    title: "Enterprise Security",
+    description: "Your data is encrypted and protected with industry-leading privacy standards."
+  },
+  {
+    icon: Globe,
+    title: "Discover Trends",
+    description: "Explore what's happening around the world right now with advanced hashtag analytics."
   },
   {
     icon: Smartphone,
-    title: "Mobile Ready",
-    description: "Perfect experience across all devices - desktop, tablet, and mobile."
+    title: "Flawless Mobile",
+    description: "Enjoy a pixel-perfect experience whether you are on desktop, tablet, or smartphone."
   }
-];
-
-const benefits = [
-  "Connect with like-minded individuals",
-  "Share your thoughts and experiences",
-  "Discover trending topics and discussions",
-  "Build your personal brand",
 ];
 
 const Landing = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative overflow-hidden">
       <Header isAuthenticated={false} />
       
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 gradient-hero opacity-10"></div>
-        <div className="container relative py-20 md:py-32">
-          <div className="grid lg:grid-cols-2 gap-12 items-center justify-center px-7">
-            <div className="space-y-8">
-              <div className="space-y-4">
-                <h1 className="text-hero gradient-primary bg-clip-text text-transparent">
-                  Connect, Share, Inspire
-                </h1>
-                <p className="text-subtitle max-w-xl">
-                  Join a community where your voice matters. Share your thoughts, 
-                  connect with others, and be part of meaningful conversations.
-                </p>
-              </div>
-              
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link to="/auth?mode=signup">
-                  <Button size="lg" className="btn-hero">
-                    Get Started
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </Button>
-                </Link>
-                <Link to="/auth">
-                  <Button variant="outline" size="lg" className="btn-secondary">
-                    Sign In
-                  </Button>
-                </Link>
-              </div>
-
-              <div className="flex items-center space-x-6 text-sm text-muted-foreground">
-                <div className="flex items-center">
-                  <CheckCircle className="h-4 w-4 mr-2 text-success" />
-                  Free to join
-                </div>
-                <div className="flex items-center">
-                  <CheckCircle className="h-4 w-4 mr-2 text-success" />
-                  No spam, ever
-                </div>
-                <div className="flex items-center">
-                  <CheckCircle className="h-4 w-4 mr-2 text-success" />
-                  Mobile friendly
-                </div>
-              </div>
-            </div>
-            
-            <div className="relative">
-              <div className="absolute inset-0 gradient-primary rounded-3xl opacity-20 blur-3xl"></div>
-              <img 
-                src={heroImage}
-                alt="Social platform hero"
-                className="relative z-10 w-full h-[450px] rounded-2xl shadow-xl"
-              />
-            </div>
+      {/* Hero Section */}
+      <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden">
+        <div className="container relative z-10 px-6 mx-auto flex flex-col items-center text-center">
+          <div className="inline-flex items-center space-x-2 px-4 py-2 rounded-full glass-panel mb-8 animate-fade-in">
+            <Activity className="w-4 h-4 text-primary" />
+            <span className="text-sm font-medium text-primary-light">The next generation of social networking</span>
+          </div>
+          
+          <h1 className="text-hero mb-6 max-w-5xl text-highlight animate-float" style={{ animationDuration: '8s' }}>
+            Where Ideas <br className="hidden md:block" /> Connect & Thrive.
+          </h1>
+          
+          <p className="text-subtitle mb-10 max-w-2xl mx-auto text-muted-foreground">
+            Join an exclusive community of forward-thinkers. Share your story, discover trending topics, and build meaningful relationships in a beautifully designed space.
+          </p>
+          
+          <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
+            <Link to="/auth?mode=signup">
+              <Button className="btn-hero text-lg px-8 py-6">
+                Start Exploring
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
+            <Link to="/auth?mode=signin">
+              <Button className="btn-secondary text-lg px-8 py-6">
+                Sign In
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
 
-      <section className="py-20 bg-gradient-subtle flex justify-center items-center">
-        <div className="container">
+      {/* Features Showcase */}
+      <section className="py-24 relative z-10">
+        <div className="container px-6 mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4">Why Choose SocialHub?</h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto px-6">
-              Everything you need to build meaningful connections and share your story
+            <h2 className="text-3xl md:text-5xl font-heading font-bold mb-4 text-white">
+              Engineered for <span className="text-primary">Excellence</span>
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Every detail has been crafted to provide you with the most seamless and immersive social experience possible.
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 px-3 justify-center items-center">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
             {features.map((feature, index) => (
-              <Card key={index} className="card-interactive hover-lift">
-                <CardContent className="p-6 text-center">
-                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-lg gradient-primary mb-4">
-                    <feature.icon className="h-6 w-6 text-white" />
+              <div key={index} className="card-interactive hover-lift group relative overflow-hidden">
+                <div className="absolute inset-0 bg-primary-solid opacity-0 group-hover:opacity-5 transition-opacity duration-500"></div>
+                <div className="relative z-10">
+                  <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl glass-panel text-primary mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <feature.icon className="h-7 w-7" />
                   </div>
-                  <h3 className="font-heading text-lg font-semibold mb-2">
+                  <h3 className="font-heading text-xl font-semibold mb-3 text-white group-hover:text-primary-light transition-colors">
                     {feature.title}
                   </h3>
-                  <p className="text-muted-foreground">
+                  <p className="text-muted-foreground leading-relaxed">
                     {feature.description}
                   </p>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/*THIS IS BENEFIT SECTION*/}
-      <section className="py-20">
-        <div className="container">
-          <div className="grid lg:grid-cols-2 gap-16 items-center px-8">
-            <div>
-              <h2 className="text-4xl font-bold mb-6">
-                Join thousands of users who love SocialHub
+      {/* CTA Section */}
+      <section className="py-24 relative z-10">
+        <div className="container px-6 mx-auto">
+          <div className="relative rounded-3xl overflow-hidden glass-panel border border-white/10 p-12 md:p-20 text-center">
+            <div className="absolute inset-0 bg-primary/5 opacity-30"></div>
+            <div className="relative z-10 max-w-3xl mx-auto">
+              <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white tracking-tight">
+                Ready to elevate your social experience?
               </h2>
-              <p className="text-xl text-muted-foreground mb-8">
-                Be part of a growing community that values authentic connections 
-                and meaningful conversations.
+              <p className="text-xl mb-10 text-primary-light/80">
+                Join thousands of users who have already made the switch to the most beautifully designed platform on the web.
               </p>
-              
-              <div className="space-y-4">
-                {benefits.map((benefit, index) => (
-                  <div key={index} className="flex items-center space-x-3">
-                    <CheckCircle className="h-5 w-5 text-success flex-shrink-0" />
-                    <span className="text-foreground">{benefit}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-            
-            <div className="space-y-6">
-              <Card className="p-6 border-l-4 border-l-primary">
-                <div className="flex items-start space-x-4">
-                  <div>
-                    <p className="font-medium">Stephnie Godwin</p>
-                    <p className="text-sm text-muted-foreground mb-2">Web Dev</p>
-                    <p className="italic">"SocialHub has transformed how I connect with my audience. The interface is beautiful and amazing!"</p>
-                  </div>
-                </div>
-              </Card>
-              
-              <Card className="p-6 border-l-4 border-l-primary">
-                <div className="flex items-start space-x-4">
-                  <div>
-                    <p className="font-medium">Daniel Ishaku</p>
-                    <p className="text-sm text-muted-foreground mb-2">Entrepreneur</p>
-                    <p className="italic">"The perfect platform for building professional relationships while keeping things personal and authentic."</p>
-                  </div>
-                </div>
-              </Card>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/*THIS S CTA Section */}
-      <section className="py-20 gradient-hero">
-        <div className="container text-center">
-          <div className="max-w-3xl mx-auto text-white">
-            <h2 className="text-4xl font-bold mb-6">
-              Ready to Get Started?
-            </h2>
-            <p className="text-xl mb-8 opacity-90">
-              Join our community today and start connecting with people who matter
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/auth?mode=signup">
-                <Button size="lg" variant="secondary" className="bg-white text-primary hover:bg-white/90">
-                  Create Your Account
+                <Button className="btn-hero text-lg px-10 py-6">
+                  Create Your Account Now
                   <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-              </Link>
-              <Link to="/auth">
-                <Button size="lg" variant="outline" className="border-white text-white bg-white/10">
-                  Sign In Instead
                 </Button>
               </Link>
             </div>
@@ -222,20 +140,15 @@ const Landing = () => {
       </section>
 
       {/* Footer */}
-      <footer className="py-12 border-t border-border">
-        <div className="container">
-          <div className="flex flex-col md:flex-row items-center justify-between">
-            <div className="flex items-center space-x-2 mb-4 md:mb-0">
-              {/* <div className="h-8 w-8 rounded-lg gradient-primary"></div> */}
-              <span className="font-heading text-xl font-bold ml-3">SocialHub</span>
-            </div>
-            
-            <div className="text-center md:text-right">
-              <p className="text-muted-foreground">
-                © {new Date().getFullYear()} SocialHub
-              </p>
-            </div>
+      <footer className="py-10 border-t border-white/5 relative z-10">
+        <div className="container px-6 mx-auto flex flex-col md:flex-row items-center justify-between">
+          <div className="flex items-center space-x-2 mb-4 md:mb-0">
+            <Activity className="h-5 w-5 text-primary" />
+            <span className="font-heading text-xl font-bold text-white">SocialHub</span>
           </div>
+          <p className="text-sm text-muted-foreground">
+            © {new Date().getFullYear()} SocialHub. Crafted with precision.
+          </p>
         </div>
       </footer>
     </div>

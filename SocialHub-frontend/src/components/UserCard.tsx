@@ -1,9 +1,10 @@
+import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Trash2, Mail, Calendar } from "lucide-react";
-// import { useNavigate } from "react-router-dom";
+import { Trash2, Mail, Calendar, FileText, UserPlus, UserMinus } from "lucide-react";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 interface UserData {
   id: string;
@@ -23,6 +24,8 @@ interface UserCardProps {
   isAdmin: boolean;
 }
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const UserCard = ({
   user,
   onDelete,
@@ -30,30 +33,73 @@ const UserCard = ({
   variant = "card",
   isAdmin,
 }: UserCardProps) => {
-  // const navigate = useNavigate();
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [followersCount, setFollowersCount] = useState(0);
+  const token = localStorage.getItem("token");
 
-  const handleDelete = () => {
-    if (onDelete) {
-      onDelete(user.id);
+  const getCurrentUserId = (): number | null => {
+    if (!token) return null;
+    try {
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      return payload.id ?? null;
+    } catch {
+      return null;
+    }
+  };
+  const currentUserId = getCurrentUserId();
+  const isSelf = currentUserId === Number(user.id);
+
+  useEffect(() => {
+    if (!token || isSelf) return;
+    axios
+      .get(`${API_URL}/users/${user.id}/follow-status`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => {
+        setIsFollowing(res.data.is_following);
+        setFollowersCount(res.data.followers_count);
+      })
+      .catch(console.error);
+  }, [user.id, token]);
+
+  const handleFollow = async () => {
+    if (!token) return toast.error("Please login first.");
+    try {
+      const res = await axios.post(
+        `${API_URL}/users/${user.id}/follow`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setIsFollowing(res.data.is_following);
+      setFollowersCount((prev) => (res.data.is_following ? prev + 1 : prev - 1));
+      toast.success(res.data.message, { style: { background: "#18181b", color: "#fff" } });
+    } catch {
+      toast.error("Failed to update follow status.");
     }
   };
 
-  // Table variant (unchanged)
+  const handleDelete = () => {
+    if (onDelete) onDelete(user.id);
+  };
+
+  const getImageUrl = (image?: string) => {
+    if (!image) return undefined;
+    if (image.startsWith("http")) return image;
+    return `${API_URL}/${image.replace(/^\/+/, "")}`;
+  };
+
   if (variant === "table") {
     return (
-      <tr
-        className="border-b border-border hover:bg-secondary/50 transition-smooth cursor-pointer"
-        // onClick={() => {
-        //   navigate("/singlepage/" + user.id);
-        // }}
-      >
+      <tr className="border-b border-white/5 hover:bg-white/5 transition-colors cursor-pointer">
         <td className="py-4 px-6">
           <div className="flex items-center space-x-3">
             <Avatar className="h-10 w-10">
-              <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+              <AvatarFallback className="bg-primary-solid text-white font-bold">
+                {user.name.charAt(0).toUpperCase()}
+              </AvatarFallback>
             </Avatar>
             <div>
-              <p className="font-medium">{user.name}</p>
+              <p className="font-medium text-white">{user.name}</p>
               <p className="text-sm text-muted-foreground">{user.email}</p>
             </div>
           </div>
@@ -61,14 +107,12 @@ const UserCard = ({
         <td className="py-4 px-6">
           <Badge
             variant={user.role === "admin" ? "default" : "secondary"}
-            className={user.role === "admin" ? "gradient-primary text-white" : ""}
+            className={user.role === "admin" ? "bg-primary-solid text-white" : ""}
           >
             {user.role}
           </Badge>
         </td>
-        <td className="py-4 px-6 text-sm text-muted-foreground">
-          {user.created_at}
-        </td>
+        <td className="py-4 px-6 text-sm text-muted-foreground">{user.created_at}</td>
         <td className="py-4 px-6 text-sm text-muted-foreground">{user.posts}</td>
         <td className="py-4 px-6">
           {showDeleteButton && isAdmin && (
@@ -76,7 +120,7 @@ const UserCard = ({
               variant="outline"
               size="sm"
               onClick={handleDelete}
-              className="hover:bg-destructive hover:text-destructive-foreground"
+              className="border-white/10 bg-white/5 hover:bg-destructive hover:text-white hover:border-destructive transition-all"
             >
               <Trash2 className="h-4 w-4" />
             </Button>
@@ -86,69 +130,76 @@ const UserCard = ({
     );
   }
 
-  // Card variant (improved for mobile)
   return (
-    <Card className="card-interactive hover-lift w-[280px] sm:w-[300px]">
-      <CardHeader className="flex flex-col items-center pb-4">
-        {/* Avatar */}
-        <Avatar className="h-20 w-20 mb-3">
-          <AvatarImage src={user.avatar} alt={user.name} />
-          <AvatarFallback className="text-2xl">
-            {user.name.charAt(0)}
+    <div className="glass-panel rounded-2xl p-5 hover-lift flex flex-col gap-4">
+      {/* Avatar + Name + Role */}
+      <div className="flex items-center gap-4">
+        <Avatar className="h-14 w-14 ring-2 ring-primary/20">
+          <AvatarImage src={getImageUrl(user.avatar)} alt={user.name} />
+          <AvatarFallback className="bg-primary-solid text-white font-bold text-xl">
+            {user.name.charAt(0).toUpperCase()}
           </AvatarFallback>
         </Avatar>
+        <div className="flex-1 min-w-0">
+          <h3 className="font-heading text-base font-semibold text-white truncate">{user.name}</h3>
+          <Badge
+            variant={user.role === "admin" ? "default" : "secondary"}
+            className={`mt-1 ${user.role === "admin" ? "bg-primary-solid text-white" : ""}`}
+          >
+            {user.role}
+          </Badge>
+        </div>
+      </div>
 
-        {/* Name */}
-        <h3 className="font-heading text-lg sm:text-xl font-semibold text-center">
-          {user.name}
-        </h3>
-
-        {/* Role badge */}
-        <Badge
-          variant={user.role === "admin" ? "default" : "secondary"}
-          className={`mt-2 ${
-            user.role === "admin" ? "gradient-primary text-white" : ""
-          }`}
-        >
-          {user.role}
-        </Badge>
-
-        {/* Email */}
-        <p className="mt-2 text-sm text-muted-foreground flex items-center">
-          <Mail className="h-4 w-4 mr-2" />
+      {/* Meta */}
+      <div className="space-y-2 text-sm text-muted-foreground border-t border-white/5 pt-4">
+        <div className="flex items-center gap-2 truncate">
+          <Mail className="h-4 w-4 text-primary shrink-0" />
           <span className="truncate">{user.email}</span>
-        </p>
-      </CardHeader>
-
-      <CardContent className="space-y-3 text-center">
-        {/* Joined Date */}
-        <div className="flex items-center justify-center text-sm text-muted-foreground">
-          <Calendar className="h-4 w-4 mr-2" />
-          Joined {user.created_at.split("T")[0]}
         </div>
-
-        {/* Stats */}
-        <div className="grid grid-cols-1 gap-4 pt-4 border-t border-border">
-          <div>
-            <p className="font-semibold">{user.posts}</p>
-            <p className="text-xs text-muted-foreground">Posts</p>
-          </div>
+        <div className="flex items-center gap-2">
+          <Calendar className="h-4 w-4 text-primary shrink-0" />
+          <span>Joined {user.created_at.split("T")[0]}</span>
         </div>
-      </CardContent>
+        <div className="flex items-center gap-2">
+          <FileText className="h-4 w-4 text-primary shrink-0" />
+          <span>
+            <span className="font-semibold text-white">{user.posts}</span> Posts ·{" "}
+            <span className="font-semibold text-white">{followersCount}</span> Followers
+          </span>
+        </div>
+      </div>
 
-      {showDeleteButton && isAdmin && (
-        <CardFooter>
+      {/* Actions */}
+      <div className="flex gap-2 mt-1">
+        {!isSelf && (
+          <Button
+            onClick={handleFollow}
+            variant="outline"
+            className={`flex-1 border-white/10 transition-all ${
+              isFollowing
+                ? "bg-primary/10 text-primary hover:bg-destructive/10 hover:text-red-400 hover:border-red-400/30"
+                : "bg-white/5 text-white hover:bg-primary/20 hover:border-primary/40"
+            }`}
+          >
+            {isFollowing ? (
+              <><UserMinus className="h-4 w-4 mr-2" />Unfollow</>
+            ) : (
+              <><UserPlus className="h-4 w-4 mr-2" />Follow</>
+            )}
+          </Button>
+        )}
+        {showDeleteButton && isAdmin && (
           <Button
             variant="outline"
             onClick={handleDelete}
-            className="w-full hover:bg-destructive hover:text-destructive-foreground"
+            className="border-white/10 bg-white/5 hover:bg-destructive hover:text-white hover:border-destructive transition-all"
           >
-            <Trash2 className="h-4 w-4 mr-2" />
-            Delete User
+            <Trash2 className="h-4 w-4" />
           </Button>
-        </CardFooter>
-      )}
-    </Card>
+        )}
+      </div>
+    </div>
   );
 };
 

@@ -1,15 +1,18 @@
-from fastapi import APIRouter, Depends,HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from sqlalchemy import distinct
-from .. import models,  database
+from .. import models, database
+from ..utils.auth import verify_token_only
 
+router = APIRouter(prefix='/checkAdmin')
 
-
-router=APIRouter(prefix='/checkAdmin')
 
 @router.get('/{savedEmail}')
-def check_Admin(savedEmail:str,db:Session=Depends(database.get_db)):
-    user=db.query(models.User).filter(models.User.email==savedEmail).first()
+def check_admin(
+    savedEmail: str,
+    db: Session = Depends(database.get_db),
+    _: dict = Depends(verify_token_only),
+):
+    user = db.query(models.User).filter(models.User.email == savedEmail).first()
     if not user:
-        raise HTTPException(status_code=404,detail='USER NOT FOUND')
-    return {'is_admin':user.role.lower()=='admin'}
+        raise HTTPException(status_code=404, detail="User not found")
+    return {'is_admin': user.role.lower() == 'admin'}

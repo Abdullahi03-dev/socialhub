@@ -1,20 +1,24 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from .routes import auth,fetchUsers,delete_cookie,analytics_fetch,edit_user,likes_logic,checkAdmin,add_post  # your routers
+from .routes import (
+    auth, fetchUsers, delete_cookie, analytics_fetch,
+    edit_user, likes_logic, checkAdmin, add_post,
+    comments, follows, notifications
+)
 
-app = FastAPI()
+app = FastAPI(title="SocialHub API")
 
-# Allow your frontend origin
 origins = [
     "https://socialhub.pxxl.xyz",
     "http://localhost:5173",
+    "http://localhost:5174",
     "http://localhost:3000",
     "http://127.0.0.1:5173",
     "http://127.0.0.1:8000",
     "https://socialhub-backend-se80.onrender.com",
     "https://social-hub-frontend-kappa.vercel.app",
-    'https://socialhub.pxxl.click',
+    "https://socialhub.pxxl.click",
 ]
 
 app.add_middleware(
@@ -27,7 +31,8 @@ app.add_middleware(
 )
 
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
-# Routers
+
+# Existing routers
 app.include_router(auth.router)
 app.include_router(fetchUsers.router)
 app.include_router(add_post.router)
@@ -36,3 +41,8 @@ app.include_router(analytics_fetch.router)
 app.include_router(edit_user.router)
 app.include_router(likes_logic.router)
 app.include_router(checkAdmin.router)
+
+# New feature routers
+app.include_router(comments.router)
+app.include_router(follows.router)
+app.include_router(notifications.router)

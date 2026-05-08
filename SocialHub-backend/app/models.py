@@ -52,10 +52,11 @@
     
     
     
-from sqlalchemy import Column, Integer, String, DateTime, func, Text, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey, Boolean, UniqueConstraint
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from .database import Base
+
 
 # -------------------------
 # User Model
@@ -74,8 +75,14 @@ class User(Base):
     role = Column(String)
     created_at = Column(DateTime, default=datetime.utcnow)
 
-    user_posts = relationship("Post", back_populates="user")
+    user_posts = relationship("Post", back_populates="user", cascade="all, delete")
     likes = relationship("PostLike", back_populates="user", cascade="all, delete")
+    comments = relationship("Comment", back_populates="user", cascade="all, delete")
+    notifications = relationship("Notification", foreign_keys="Notification.recipient_id", back_populates="recipient", cascade="all, delete")
+
+    # Follow relationships
+    following = relationship("Follow", foreign_keys="Follow.follower_id", back_populates="follower", cascade="all, delete")
+    followers = relationship("Follow", foreign_keys="Follow.followed_id", back_populates="followed", cascade="all, delete")
 
 
 # -------------------------
@@ -94,6 +101,7 @@ class Post(Base):
     user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     user = relationship("User", back_populates="user_posts")
     likes_rel = relationship("PostLike", back_populates="post", cascade="all, delete")
+    comments = relationship("Comment", back_populates="post", cascade="all, delete", order_by="Comment.created_at")
 
 
 # -------------------------
@@ -108,3 +116,59 @@ class PostLike(Base):
 
     user = relationship("User", back_populates="likes")
     post = relationship("Post", back_populates="likes_rel")
+
+    __table_args__ = (UniqueConstraint("user_id", "post_id", name="uq_user_post_like"),)
+
+
+# -------------------------
+# Comment Model
+# -------------------------
+class Comment(Base):
+    __tablename__ = "comments"
+
+    id = Column(Integer, primary_key=True, index=True)
+    content = Column(Text, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    post_id = Column(Integer, ForeignKey("posts.id", ondelete="CASCADE"), nullable=False)
+
+    user = relationship("User", back_populates="comments")
+    post = relationship("Post", back_populates="comments")
+
+
+# -------------------------
+# Follow Model
+# -------------------------
+class Follow(Base):
+    __tablename__ = "follows"
+
+    id = Column(Integer, primary_key=True, index=True)
+    follower_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    followed_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    follower = relationship("User", foreign_keys=[follower_id], back_populates="following")
+    followed = relationship("User", foreign_keys=[followed_id], back_populates="followers")
+
+    __table_args__ = (UniqueConstraint("follower_id", "followed_id", name="uq_follow"),)
+
+
+# -------------------------
+# Notification Model
+# -------------------------
+class Notification(Base):
+    __tablename__ = "notifications"
+
+    id = Column(Integer, primary_key=True, index=True)
+    type = Column(String(50), nullable=False)   # "like", "comment", "follow"
+    message = Column(String(255), nullable=False)
+    is_read = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    recipient_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    actor_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    post_id = Column(Integer, ForeignKey("posts.id", ondelete="CASCADE"), nullable=True)
+
+    recipient = relationship("User", foreign_keys=[recipient_id], back_populates="notifications")
+    actor = relationship("User", foreign_keys=[actor_id])

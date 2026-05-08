@@ -1,90 +1,61 @@
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from jose import jwt, JWTError
-from ..models import Post, PostLike, User
+from ..models import Post, PostLike, User, Notification
 from ..database import get_db
-import os
-from dotenv import load_dotenv
+from ..utils.auth import get_current_user
 
 router = APIRouter()
-load_dotenv()
-SECRET_KEY = os.environ.get("SECRET_KEY")
-ALGORITHM = "HS256"
 
 
-# ------------------- LIKE / UNLIKE -------------------
 @router.post("/posts/{post_id}/like")
-def toggle_like(post_id: int, request: Request, db: Session = Depends(get_db)):
-    auth_header = request.headers.get("Authorization")
-    if not auth_header or not auth_header.startswith("Bearer "):
-        raise HTTPException(status_code=401, detail="Missing or invalid token")
+def toggle_like(
+    post_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    post = db.query(Post).filter(Post.id == post_id).first()
+    if not post:
+        raise HTTPException(status_code=404, detail="Post not found")
 
-    token = auth_header.split(" ")[1]
+    existing_like = (
+        db.query(PostLike)
+        .filter(PostLike.user_id == current_user.id, PostLike.post_id == post_id)
+        .first()
+    )
 
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        email = payload.get("email")
+    if existing_like:
+        db.delete(existing_like)
+        post.likes = max(0, post.likes - 1)
+        db.commit()
+        return {"message": "Unliked", "likes": post.likes}
+    else:
+        db.add(PostLike(user_id=current_user.id, post_id=post_id))
+        post.likes += 1
 
-        if not email:
-            raise HTTPException(status_code=401, detail="Invalid token payload")
+        # Notify post author (skip if liking own post)
+        if post.user_id != current_user.id:
+            notif = Notification(
+                type="like",
+                message=f"{current_user.name} liked your post",
+                recipient_id=post.user_id,
+                actor_id=current_user.id,
+                post_id=post_id,
+            )
+            db.add(notif)
 
-        user = db.query(User).filter(User.email == email).first()
-        if not user:
-            raise HTTPException(status_code=404, detail="User not found")
-
-        post = db.query(Post).filter(Post.id == post_id).first()
-        if not post:
-            raise HTTPException(status_code=404, detail="Post not found")
-
-        existing_like = (
-            db.query(PostLike)
-            .filter(PostLike.user_id == user.id, PostLike.post_id == post_id)
-            .first()
-        )
-
-        if existing_like:
-            db.delete(existing_like)
-            post.likes = max(0, post.likes - 1)
-            db.commit()
-            return {"message": "Unliked", "likes": post.likes}
-        else:
-            new_like = PostLike(user_id=user.id, post_id=post_id)
-            db.add(new_like)
-            post.likes += 1
-            db.commit()
-            return {"message": "Liked", "likes": post.likes}
-
-    except JWTError:
-        raise HTTPException(status_code=401, detail="Invalid or expired token")
+        db.commit()
+        return {"message": "Liked", "likes": post.likes}
 
 
-# ------------------- CHECK IF LIKED -------------------
 @router.get("/getLiked/{post_id}/liked")
-def check_liked(post_id: int, request: Request, db: Session = Depends(get_db)):
-    auth_header = request.headers.get("Authorization")
-    if not auth_header or not auth_header.startswith("Bearer "):
-        raise HTTPException(status_code=401, detail="Missing or invalid token")
-
-    token = auth_header.split(" ")[1]
-
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        email = payload.get("email")
-
-        if not email:
-            raise HTTPException(status_code=401, detail="Invalid token payload")
-
-        user = db.query(User).filter(User.email == email).first()
-        if not user:
-            raise HTTPException(status_code=404, detail="User not found")
-
-        existing_like = (
-            db.query(PostLike)
-            .filter(PostLike.user_id == user.id, PostLike.post_id == post_id)
-            .first()
-        )
-
-        return {"liked": bool(existing_like)}
-
-    except JWTError:
-        raise HTTPException(status_code=401, detail="Invalid or expired token")
+def check_liked(
+    post_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    existing_like = (
+        db.query(PostLike)
+        .filter(PostLike.user_id == current_user.id, PostLike.post_id == post_id)
+        .first()
+    )
+    return {"liked": bool(existing_like)}

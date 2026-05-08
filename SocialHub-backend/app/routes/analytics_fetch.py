@@ -2,30 +2,29 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from sqlalchemy import distinct
 from .. import models, schemas, database
+from ..utils.auth import verify_token_only
 
 router = APIRouter()
 
+
 @router.get("/top-users", response_model=list[schemas.UserBase])
-def get_top_users(db: Session = Depends(database.get_db)):
-    # Step 1: Get unique user_ids from posts
-    user_ids = db.query(distinct(models.Post.user_id)).all()
-    user_ids = [u[0] for u in user_ids]  # flatten [(1,), (2,), (3,)] → [1,2,3]
-
-    # Step 2: Fetch users with those IDs
-    users = db.query(models.User).filter(models.User.id.in_(user_ids)).all()
-    
-    return users
-
-
+def get_top_users(
+    db: Session = Depends(database.get_db),
+    _: dict = Depends(verify_token_only),
+):
+    user_ids = [u[0] for u in db.query(distinct(models.Post.user_id)).all()]
+    return db.query(models.User).filter(models.User.id.in_(user_ids)).all()
 
 
 @router.get("/top-hashtags")
-def get_top_hashtags(db: Session = Depends(database.get_db)):
+def get_top_hashtags(
+    db: Session = Depends(database.get_db),
+    _: dict = Depends(verify_token_only),
+):
     hashtags = (
-        db.query(models.Post.hashtags)   # only fetch hashtags column
+        db.query(models.Post.hashtags)
         .order_by(models.Post.created_at.desc())
         .limit(5)
         .all()
     )
-    # SQLAlchemy returns list of tuples like [("webdev,python",), ("react,js",)...]
     return [h[0] for h in hashtags]

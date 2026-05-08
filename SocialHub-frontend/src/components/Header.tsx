@@ -1,61 +1,56 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import {  LogOut } from "lucide-react";
-// import axios from "axios";
+import { LogOut, Activity } from "lucide-react";
 import toast from "react-hot-toast";
+import NotificationBell from "@/components/NotificationBell";
+
 interface HeaderProps {
   isAuthenticated?: boolean;
-  onLogout?: () => void;
 }
+
 const Header = ({ isAuthenticated = false }: HeaderProps) => {
-  // const API_URL=import.meta.env.VITE_API_URL
   const navigate = useNavigate();
   const location = useLocation();
 
-
   const logout = async () => {
     try {
-      // await axios.post(`${API_URL}`, {}, { withCredentials: true });
-      localStorage.removeItem('token')
+      localStorage.removeItem('token');
       toast.success("Logged out successfully");
-      setTimeout(()=>{
-        navigate(0)
-      },1000)
+      setTimeout(() => {
+        navigate(0);
+      }, 1000);
     } catch (error) {
       toast.error("Logout failed");
     }
   };
 
-  // const handleLogout = () => {
-  //   if (onLogout) {
-  //     onLogout();
-  //   }
-  //   navigate('/');
-  // };
-
   const isLandingPage = location.pathname === '/';
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between">
-        <Link to="/" className="flex items-center space-x-2">
-          <div className="h-8 w-8 rounded-lg bg-gradient-primary"></div>
-          <span className="font-heading text-xl font-bold">SocialHub</span>
+    <header className="fixed top-0 left-0 right-0 z-50 w-full border-b border-white/5 glass-panel">
+      <div className="container mx-auto px-6 flex h-20 items-center justify-between">
+        <Link to="/" className="flex items-center space-x-3 group">
+          <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-primary shadow-glow transition-transform group-hover:scale-105">
+            <Activity className="h-5 w-5 text-white" />
+          </div>
+          <span className="font-heading text-2xl font-bold tracking-tight text-white">
+            Social<span className="text-primary-light">Hub</span>
+          </span>
         </Link>
 
-        <nav className="flex items-center space-x-4 pr-5">
+        <nav className="flex items-center space-x-2">
           {isAuthenticated ? (
             <>
               <Link to="/dashboard">
-                <Button variant="ghost" size="sm">
+                <Button variant="ghost" className="text-muted-foreground hover:text-white transition-colors">
                   Dashboard
                 </Button>
               </Link>
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <NotificationBell />
+              <Button
+                variant="outline"
                 onClick={logout}
-                className="hover:bg-destructive hover:text-destructive-foreground"
+                className="border-white/10 bg-white/5 hover:bg-destructive hover:text-white hover:border-destructive transition-all"
               >
                 <LogOut className="h-4 w-4 mr-2"/>
                 Logout
@@ -65,19 +60,19 @@ const Header = ({ isAuthenticated = false }: HeaderProps) => {
             <>
               {!isLandingPage && (
                 <Link to="/">
-                  <Button variant="ghost" size="sm">
+                  <Button variant="ghost" className="text-muted-foreground hover:text-white transition-colors">
                     Home
                   </Button>
                 </Link>
               )}
               <Link to="/auth?mode=signin">
-                <Button variant="outline" size="sm">
-                  Login
+                <Button variant="ghost" className="text-muted-foreground hover:text-white transition-colors">
+                  Sign In
                 </Button>
               </Link>
               <Link to="/auth?mode=signup">
-                <Button size="sm" className="btn-hero">
-                  Sign Up
+                <Button className="btn-hero shadow-glow">
+                  Get Started
                 </Button>
               </Link>
             </>

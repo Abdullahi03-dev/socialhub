@@ -50,18 +50,16 @@
 # }
     
     
-from pydantic import BaseModel,EmailStr
+from pydantic import BaseModel, EmailStr
 from datetime import datetime
 from typing import Optional, List
 
-# User Schemas
-
+# ── User Schemas ──────────────────────────────────────────
 
 class UserCreate(BaseModel):
     name: str
     email: str
     password: str
-    # role:str
 
 class UserLogin(BaseModel):
     email: EmailStr
@@ -73,57 +71,89 @@ class UserBase(BaseModel):
 
 class UserOut(UserBase):
     id: int
-    name:str
-    role:str
+    name: str
+    role: str
+    image: Optional[str] = None
 
-    model_config={
-        "from-attributes": True
-}
+    model_config = {"from_attributes": True}
 
 
 class Profile(BaseModel):
-    id:int
-    name:str
-    email:EmailStr
-    bio:str
-    image:str
-    location:str
-    posts:int
-    role:str
-    created_at:datetime
-    
-    model_config={
-        "from-attributes": True
-}
+    id: int
+    name: str
+    email: EmailStr
+    bio: Optional[str] = None
+    image: Optional[str] = None
+    location: Optional[str] = None
+    posts: int
+    role: str
+    created_at: datetime
+
+    model_config = {"from_attributes": True}
+
 
 class idRequest(BaseModel):
-    id:int
+    id: int
 
 
-# Post Schemas
+# ── Comment Schemas ───────────────────────────────────────
+
+class CommentCreate(BaseModel):
+    content: str
+
+class CommentOut(BaseModel):
+    id: int
+    content: str
+    created_at: datetime
+    user: UserOut
+
+    model_config = {"from_attributes": True}
+
+
+# ── Post Schemas ──────────────────────────────────────────
+
 class PostBase(BaseModel):
     content: str
     hashtags: Optional[str] = None
 
 class PostCreate(PostBase):
-    email: str  
-    # frontend will send email to link post
+    email: str
 
 class Post(PostBase):
     id: int
     image: Optional[str] = None
     likes: int
     created_at: datetime
-    # user: UserOut   
-    #  nested user info
-    
-    
+
 class PostWithUsers(PostBase):
     id: int
     image: Optional[str] = None
     likes: int
     created_at: datetime
-    user: UserOut   
-    model_config={
-        "from-attributes": True
-}
+    user: UserOut
+    comments: List[CommentOut] = []
+    comment_count: int = 0
+
+    model_config = {"from_attributes": True}
+
+
+# ── Follow Schemas ────────────────────────────────────────
+
+class FollowStatus(BaseModel):
+    is_following: bool
+    followers_count: int
+    following_count: int
+
+
+# ── Notification Schemas ──────────────────────────────────
+
+class NotificationOut(BaseModel):
+    id: int
+    type: str
+    message: str
+    is_read: bool
+    created_at: datetime
+    actor: UserOut
+    post_id: Optional[int] = None
+
+    model_config = {"from_attributes": True}
