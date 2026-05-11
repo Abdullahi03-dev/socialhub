@@ -6,8 +6,12 @@ from .routes import (
     edit_user, likes_logic, checkAdmin, add_post,
     comments, follows, notifications
 )
+import os
 
 app = FastAPI(title="SocialHub API")
+
+# Ensure uploads directory exists (required for StaticFiles mount)
+os.makedirs("uploads", exist_ok=True)
 
 origins = [
     "https://socialhub.pxxl.xyz",
