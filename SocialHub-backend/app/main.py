@@ -6,12 +6,15 @@ from .routes import (
     edit_user, likes_logic, checkAdmin, add_post,
     comments, follows, notifications
 )
+from .database import engine, Base
+from . import models  # noqa: F401 — ensures all models are registered
 import os
 
 app = FastAPI(title="SocialHub API")
 
-# Ensure uploads directory exists (required for StaticFiles mount)
+# Create uploads dir and all DB tables on startup
 os.makedirs("uploads", exist_ok=True)
+Base.metadata.create_all(bind=engine)
 
 origins = [
     "https://socialhub.pxxl.xyz",
