@@ -167,7 +167,7 @@ const Dashboard = () => {
       <Header isAuthenticated={true} />
       <div className="flex pt-20">
         <Sidebar />
-        <main className="flex-1 w-full relative z-10 px-4 md:px-8 py-8 md:ml-64 transition-all duration-300">
+        <main className="flex-1 w-full relative z-10 px-4 md:px-8 py-8 ml-16 md:ml-64 transition-all duration-300">
           <div className="max-w-6xl mx-auto">
             <div className="grid lg:grid-cols-4 gap-8">
 
@@ -182,7 +182,7 @@ const Dashboard = () => {
                   </div>
                   <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
                     <DialogTrigger asChild>
-                      <Button className="btn-hero flex items-center shadow-glow">
+                      <Button className="btn-hero flex items-center shadow-glow w-full sm:w-auto justify-center">
                         <Plus className="h-4 w-4 mr-2" />
                         New Post
                       </Button>

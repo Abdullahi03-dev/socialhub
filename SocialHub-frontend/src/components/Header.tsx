@@ -42,7 +42,7 @@ const Header = ({ isAuthenticated = false }: HeaderProps) => {
           {isAuthenticated ? (
             <>
               <Link to="/dashboard">
-                <Button variant="ghost" className="text-muted-foreground hover:text-white transition-colors">
+                <Button variant="ghost" className="hidden sm:inline-flex text-muted-foreground hover:text-white transition-colors">
                   Dashboard
                 </Button>
               </Link>
@@ -50,10 +50,10 @@ const Header = ({ isAuthenticated = false }: HeaderProps) => {
               <Button
                 variant="outline"
                 onClick={logout}
-                className="border-white/10 bg-white/5 hover:bg-destructive hover:text-white hover:border-destructive transition-all"
+                className="border-white/10 bg-white/5 hover:bg-destructive hover:text-white hover:border-destructive transition-all px-3 sm:px-4"
               >
-                <LogOut className="h-4 w-4 mr-2"/>
-                Logout
+                <LogOut className="h-4 w-4 sm:mr-2"/>
+                <span className="hidden sm:inline">Logout</span>
               </Button>
             </>
           ) : (
