@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
-import { 
-  Users, 
-  MessageSquare, 
-  Shield, 
+import {
+  Users,
+  MessageSquare,
+  Shield,
   Smartphone,
   ArrowRight,
   Globe,
@@ -48,7 +48,7 @@ const Landing = () => {
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
       <Header isAuthenticated={false} />
-      
+
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto flex flex-col items-center text-center">
@@ -56,15 +56,15 @@ const Landing = () => {
             <Activity className="w-4 h-4 text-primary" />
             <span className="text-sm font-medium text-primary-light">The next generation of social networking</span>
           </div>
-          
+
           <h1 className="text-hero mb-6 max-w-5xl text-highlight animate-float" style={{ animationDuration: '8s' }}>
             Where Ideas <br className="hidden md:block" /> Connect & Thrive.
           </h1>
-          
+
           <p className="text-subtitle mb-10 max-w-2xl mx-auto text-muted-foreground">
             Join an exclusive community of forward-thinkers. Share your story, discover trending topics, and build meaningful relationships in a beautifully designed space.
           </p>
-          
+
           <div className="flex flex-col sm:flex-row gap-4 items-center justify-center w-full max-w-sm sm:max-w-none mx-auto">
             <Link to="/auth?mode=signup" className="w-full sm:w-auto">
               <Button className="btn-hero text-lg px-8 py-6 w-full sm:w-auto">
@@ -92,7 +92,7 @@ const Landing = () => {
               Every detail has been crafted to provide you with the most seamless and immersive social experience possible.
             </p>
           </div>
-          
+
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
             {features.map((feature, index) => (
               <div key={index} className="card-interactive hover-lift group relative overflow-hidden">
@@ -128,8 +128,8 @@ const Landing = () => {
               </p>
               <Link to="/auth?mode=signup" className="block w-full max-w-sm mx-auto sm:max-w-none sm:w-auto">
                 <Button className="btn-hero text-lg px-10 py-6 w-full sm:w-auto">
-                  Create Your Account Now
-                  <ArrowRight className="ml-2 h-5 w-5 inline" />
+                  Create Your Account
+                  {/* <ArrowRight className="ml-2 h-5 w-5 inline" /> */}
                 </Button>
               </Link>
             </div>

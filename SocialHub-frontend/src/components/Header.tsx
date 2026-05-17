@@ -52,7 +52,7 @@ const Header = ({ isAuthenticated = false }: HeaderProps) => {
                 onClick={logout}
                 className="border-white/10 bg-white/5 hover:bg-destructive hover:text-white hover:border-destructive transition-all px-3 sm:px-4"
               >
-                <LogOut className="h-4 w-4 sm:mr-2"/>
+                <LogOut className="h-4 w-4 sm:mr-2" />
                 <span className="hidden sm:inline">Logout</span>
               </Button>
             </>
@@ -68,11 +68,6 @@ const Header = ({ isAuthenticated = false }: HeaderProps) => {
               <Link to="/auth?mode=signin">
                 <Button variant="ghost" className="text-muted-foreground hover:text-white transition-colors">
                   Sign In
-                </Button>
-              </Link>
-              <Link to="/auth?mode=signup">
-                <Button className="btn-hero shadow-glow">
-                  Get Started
                 </Button>
               </Link>
             </>
